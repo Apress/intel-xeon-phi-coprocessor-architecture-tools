@@ -1,0 +1,1952 @@
+                          Intel(R) C++ Compiler Help
+                          ==========================
+
+
+
+  Intel(R) Compiler includes compiler options that optimize for instruction
+  sets that are available in both Intel(R) and non-Intel microprocessors, but
+  may perform additional optimizations for Intel microprocessors than for
+  non-Intel microprocessors.  In addition, certain compiler options for
+  Intel(R) Compiler are reserved for Intel microprocessors.  For a detailed
+  description of these compiler options, including the instructions they
+  implicate, please refer to "Intel(R) Compiler User and Reference Guides >
+  Compiler Options."
+
+
+
+  usage: icc [options] file1 [file2 ...]
+         icpc [options] file1 [file2 ...]
+
+     where options represents zero or more compiler options
+
+     fileN is a C/C++ source (.C .c .cc .cpp .cxx .c++ .i .ii), 
+     assembly (.s .S), object (.o), static library (.a), or other 
+     linkable file
+
+     The icpc command uses the same compiler options as the icc
+     command.  Invoking the compiler using icpc compiles .c and .i files
+     as C++.  Invoking the compiler using icc compiles .c and .i files as
+     C.  Using icpc always links in C++ libraries.  Using icc only
+     links in C++ libraries if C++ source is provided on the command line.
+
+     Commonly used options may be placed in the icc .cfg file.
+
+
+
+   Some options listed are only available on a specific system
+   i32    indicates the feature is available on systems based on IA-32
+          architecture
+   i64em  indicates the feature is available on systems using Intel(R) 64
+          architecture
+
+
+
+                             Compiler Option List
+                             --------------------
+
+
+Optimization
+------------
+
+
+
+-O1       optimize for maximum speed, but disable some optimizations which
+          increase code size for a small speed benefit
+
+-O2       optimize for maximum speed (DEFAULT)
+
+-O3       optimize for maximum speed and enable more aggressive optimizations
+          that may not improve performance on some programs
+
+-O        same as -O2
+
+-Os       enable speed optimizations, but disable some optimizations which
+          increase code size for small speed benefit 
+
+-O0       disable optimizations
+
+-fast     enable -xHOST -O3 -ipo -no-prec-div -static
+          options set by -fast cannot be overridden with the exception of
+          -xHOST, list options separately to change behavior
+
+-Ofast    enable -O3 -no-prec-div optimizations
+
+-fno-alias
+          assume no aliasing in program
+
+-fno-fnalias
+          assume no aliasing within functions, but assume aliasing across calls
+
+-f[no-]builtin
+          disable inline expansion of intrinsic functions
+
+-fno-builtin-<func>
+          disable the <func> intrinsic
+
+-ffunction-sections
+          separate functions for the linker (COMDAT)
+
+-fdata-sections
+          place each data item into its own section
+
+-f[no-]defer-pop
+          disable optimizations which may result in
+          deferred clearance of the stack arguments
+
+-nolib-inline
+          disable inline expansion of intrinsic functions
+
+-f[no-]optimize-sibling-calls
+          Optimize sibling and tail recursive calls. 
+          Enabled at levels -O2, -O3, -Os.
+
+
+Code Generation
+---------------
+
+
+
+-x<code>  generate specialized code to run exclusively on processors
+          indicated by <code> as described below
+
+            SSE2    May generate Intel(R) SSE2 and SSE instructions for Intel
+                    processors.  Optimizes for the Intel NetBurst(R)
+                    microarchitecture.
+            SSE3    May generate Intel(R) SSE3, SSE2, and SSE instructions for
+                    Intel processors.  Optimizes for the enhanced Pentium(R) M 
+                    processor microarchitecture and Intel NetBurst(R)
+                    microarchitecture. 
+
+            SSSE3   May generate Intel(R) SSSE3, SSE3, SSE2, and SSE
+                    instructions for Intel processors.  Optimizes for the
+                    Intel(R) Core(TM) microarchitecture.
+
+            SSE4.1  May generate Intel(R) SSE4 Vectorizing Compiler and Media
+                    Accelerator instructions for Intel processors.  May 
+                    generate Intel(R) SSSE3, SSE3, SSE2, and SSE instructions
+                    and it may optimize for Intel(R) 45nm Hi-k next generation
+                    Intel Core(TM) microarchitecture.
+
+            SSE4.2  May generate Intel(R) SSE4 Efficient Accelerated String
+                    and Text Processing instructions supported by Intel(R)
+                    Core(TM) i7 processors.  May generate Intel(R) SSE4 
+                    Vectorizing Compiler and Media Accelerator, Intel(R) SSSE3,
+                    SSE3, SSE2, and SSE instructions and it may optimize for
+                    the Intel(R) Core(TM) processor family.
+            AVX     May generate Intel(R) Advanced Vector Extensions (Intel(R)
+                    AVX), Intel(R) SSE4.2, SSE4.1, SSSE3, SSE3,
+                    SSE2, and SSE instructions for Intel(R) processors.
+                    Optimizes for a future Intel processor.
+            CORE-AVX2
+                    May generate Intel(R) Advanced Vector Extensions 2
+                    (Intel(R) AVX2), Intel(R) AVX, SSE4.2, SSE4.1, SSSE3, SSE3,
+                    SSE2, and SSE instructions for Intel(R) processors.
+                    Optimizes for a future Intel processor.
+            CORE-AVX-I
+                    May generate Intel(R) Advanced Vector Extensions (Intel(R)
+                    AVX), including instructions in Intel(R) Core 2(TM)
+                    processors in process technology smaller than 32nm,
+                    Intel(R) SSE4.2, SSE4.1, SSSE3, SSE3, SSE2, and SSE
+                    instructions for Intel(R) processors. Optimizes for a
+                    future Intel processor. 
+
+            SSSE3_ATOM
+                    May generate MOVBE instructions for Intel processors,
+                    depending on the setting of option -minstruction.
+                    May also generate Intel(R) SSSE3, SSE3, SSE2, and SSE
+                    instructions for Intel processors. Optimizes for the
+                    Intel(R) Atom(TM) processor and Intel(R) Centrino(R)
+                    Atom(TM) Processor Technology.
+
+-xHost    generate instructions for the highest instruction set and processor
+          available on the compilation host machine
+
+-ax<code1>[,<code2>,...]
+          generate code specialized for processors specified by <codes>
+          while also generating generic IA-32 instructions.  
+          <codes> includes one or more of the following:
+
+            SSE2    May generate Intel(R) SSE2 and SSE instructions for Intel
+                    processors.
+            SSE3    May generate Intel(R) SSE3, SSE2, and SSE instructions for
+                    Intel processors. 
+
+            SSSE3   May generate Intel(R) SSSE3, SSE3, SSE2, and SSE
+                    instructions for Intel processors.
+
+            SSE4.1  May generate Intel(R) SSE4.1, SSSE3, SSE3, SSE2, and SSE
+                   instructions for Intel processors.
+
+            SSE4.2  May generate Intel(R) SSE4.2, SSE4.1, SSSE3, SSE3, SSE2,
+                    and SSE instructions for Intel processors.
+            AVX     May generate Intel(R) Advanced Vector Extensions (Intel(R)
+                    AVX), Intel(R) SSE4.2, SSE4.1, SSSE3, SSE3,
+                    SSE2, and SSE instructions for Intel(R) processors.
+            CORE-AVX2
+                    May generate Intel(R) Advanced Vector Extensions 2
+                    (Intel(R) AVX2), Intel(R) AVX, SSE4.2, SSE4.1, SSSE3, SSE3,
+                    SSE2, and SSE instructions for Intel(R) processors.
+            CORE-AVX-I
+                    May generate Intel(R) Advanced Vector Extensions (Intel(R)
+                    AVX), including instructions in Intel(R) Core 2(TM)
+                    processors in process technology smaller than 32nm,
+                    Intel(R) SSE4.2, SSE4.1, SSSE3, SSE3, SSE2, and SSE
+                    instructions for Intel(R) processors.
+
+-mcpu=<cpu>
+          same as -mtune=<cpu>
+
+-mtune=<cpu>
+          optimize for a specific <cpu>
+            pentium3  - optimize for Pentium(R) III processors
+            pentium4  - optimize for Pentium(R) 4 processor (DEFAULT)
+
+-march=<cpu>
+          generate code exclusively for a given <cpu>
+            core-avx2  - processors that support Intel(R) Advanced Vector
+                         Extensions 2 (Intel(R) AVX2)
+            core-avx-i - processors that support Intel(R) Advanced Vector
+                         Extensions (Intel(R) AVX), including instructions in
+                         Intel(R) Core 2(TM) processors in process technology
+                         smaller than 32nm
+            corei7-avx - processors that support Intel(R) Advanced Vector
+                         Extensions (Intel(R) AVX)
+            corei7     - processors that support Intel(R) SSE4 Efficient
+                         Accelerated String and Text Processing instructions
+            atom       - processors that support MOVBE instructions
+            core2      - Intel(R) Core 2(TM) processor family
+            pentium-m  - Intel(R) Pentium(R) M processors
+            pentium4   - Intel(R) Pentium(R) 4 processors
+            pentium3   - Intel(R) Pentium(R) III processors (Linux only)
+
+-msse3    May generate Intel(R) SSE3, SSE2, and SSE instructions
+
+-mssse3   May generate Intel(R) SSSE3, SSE3, SSE2, and SSE instructions
+
+-msse4    Enable -msse4.2
+
+-msse4.1  May generate Intel(R) SSE4.1, SSSE3, SSE3, SSE2, and SSE instructions
+
+-msse4.2  May generate Intel(R) SSE4.2, SSE4.1, SSSE3, SSE3, SSE2, and SSE
+          instructions
+
+-mavx     May generate Intel(R) AVX, SSE4.2, SSE4.1, SSSE3, SSE3, SSE2, and SSE
+          instructions
+
+-masm=<dialect>
+          generate asm instructions specified by <dialect>, which may be
+          att (DEFAULT) or intel 
+
+-mmic     build an application that runs natively on Intel(R) MIC Architecture
+
+-minstruction=<keyword>
+          Refine instruction set output for the selected target processor
+
+            [no]movbe  - Do/do not generate MOVBE instructions with SSSE3_ATOM
+                          (requires -xSSSE3_ATOM)
+           
+
+-f[no-]omit-frame-pointer
+          enable(DEFAULT)/disable use of EBP as general purpose register.
+          -fno-omit-frame-pointer replaces -fp
+
+-f[no-]exceptions
+          enable/disable(DEFAULT) C++ exception handling table generation
+
+-fnon-call-exceptions
+          enable/disable(DEFAULT) code that allows exceptions from trapping 
+          instructions to be caught
+
+-regcall  make __regcall the default calling convention
+
+-hotpatch[=n]
+          generate padding bytes for function entries to enable image
+          hotpatching. If specified, use 'n' as the padding.
+
+-fasynchronous-unwind-tables
+          determines whether unwind information is precise at an instruction
+          boundary or at a call boundary.  -fno-asynchronous-unwind-tables is
+          the default for IA-32 architecture.
+
+-fextend-arguments=[32|64]
+          By default, unprototyped scalar integer arguments are passed
+          in 32-bits (sign-extended if necessary).
+          On Intel(R) 64, unprototyped scalar integer arguments may be 
+          extended to 64-bits.
+
+
+Interprocedural Optimization (IPO)
+----------------------------------
+
+
+
+-[no-]ip  enable(DEFAULT)/disable single-file IP optimization
+          within files
+
+-ipo[n]   enable multi-file IP optimization between files
+
+-ipo-c    generate a multi-file object file (ipo_out.o)
+
+-ipo-S    generate a multi-file assembly file (ipo_out.S)
+
+-ip-no-inlining
+          disable full and partial inlining
+
+-ip-no-pinlining
+          disable partial inlining
+
+-ipo-separate
+          create one object file for every source file (overrides -ipo[n])
+
+-ipo-jobs<n>
+          specify the number of jobs to be executed simultaneously during the
+          IPO link phase
+
+
+Advanced Optimizations
+----------------------
+
+
+
+-unroll[n]
+          set maximum number of times to unroll loops.  Omit n to use default
+          heuristics.  Use n=0 to disable the loop unroller
+
+-[no-]unroll-aggressive
+          enables more aggressive unrolling heuristics
+
+-funroll-loops
+          unroll loops based on default heuristics
+
+-[no-]scalar-rep
+          enable(DEFAULT)/disable scalar replacement (requires -O3)
+
+-[no-]ansi-alias
+          enable/disable(DEFAULT) use of ANSI aliasing rules optimizations;
+          user asserts that the program adheres to these rules
+
+-[no-]ansi-alias-check
+          enable(DEFAULT)/disable ANSI alias checking when using -ansi-alias
+
+-[no-]complex-limited-range
+          enable/disable(DEFAULT) the use of the basic algebraic expansions of
+          some complex arithmetic operations.  This can allow for some
+          performance improvement in programs which use a lot of complex
+          arithmetic at the loss of some exponent range.
+
+-[no-]alias-const
+          enable/disable(DEFAULT) a heuristic stating that if two arguments to
+          a function have pointer type, a pointer to const does not alias a
+          pointer to non-const. Also known as the input/output buffer rule, it
+          assumes that input and output buffer arguments do not overlap.
+
+-fargument-alias
+          arguments may alias each other and may alias global storage
+
+-fargument-noalias
+          arguments do not alias each other but may alias global storage
+
+-fargument-noalias-global
+          arguments do not alias each other and do not alias global storage
+
+-ftls-model=<model>
+          change thread-local storage model, where <model> can be the
+          following: global-dynamic, local-dynamic, initial-exec or local-exec
+
+-[no-]opt-multi-version-aggressive
+          enables more aggressive multi-versioning to check for pointer
+          aliasing and scalar replacement
+
+-opt-ra-region-strategy[=<keyword>]
+          select the method that the register allocator uses to partition each
+          routine into regions
+            routine - one region per routine
+            block   - one region per block
+            trace   - one region per trace
+            loop    - one region per loop
+            default - compiler selects best option
+
+-[no-]vec
+          enables(DEFAULT)/disables vectorization
+
+-[no-]vec-guard-write
+          enables cache/bandwidth optimization for stores under conditionals
+          within vector loops
+
+-vec-threshold[n]
+          sets a threshold for the vectorization of loops based on the
+          probability of profitable execution of the vectorized loop in
+          parallel
+
+-opt-malloc-options={0|1|2|3|4}
+          specify malloc configuration parameters.  Specifying a non-zero <n>
+          value will cause alternate configuration parameters to be set for
+          how malloc allocates and frees memory
+
+-opt-calloc
+          enable/disable(DEFAULT) calls to fast calloc function
+
+-opt-jump-tables=<arg>
+          control the generation of jump tables
+            default - let the compiler decide when a jump table, a series of
+                      if-then-else constructs or a combination is generated
+            large   - generate jump tables up to a certain pre-defined size
+                      (64K entries)
+            <n>     - generate jump tables up to <n> in size
+          use -no-opt-jump-tables to lower switch statements as chains of
+          if-then-else constructs
+
+-fno-jump-tables
+          do not generate jump tables for switches and if-then-else statements
+
+-opt-block-factor=<n>
+          specify blocking factor for loop blocking
+
+-ffreestanding
+          compile in a freestanding environment where the standard library
+          may not be present
+
+-opt-streaming-stores <arg>
+          specifies whether streaming stores are generated
+            always - enables generation of streaming stores under the
+            assumption that the application is memory bound
+            auto   - compiler decides when streaming stores are used (DEFAULT)
+            never  - disables generation of streaming stores
+
+-ipp[=<arg>]
+          link some or all of the Intel(R) Integrated Performance Primitives
+          (Intel(R) IPP) libraries and bring in the associated headers
+            common        - link using the main libraries set.  This is the
+                            default value when -ipp is specified 
+            crypto        - link using the main libraries set and the crypto
+                            library
+            gen           - link using the main libraries set and the fixed 
+                            size generated functions library
+
+
+
+-ipp-link=<arg>
+          choose whether to link with static or dynamic libraries to support
+          Intel(R) Integrated Performance Primitives (Intel(R) IPP) 
+            dynamic       - link using the dynamic libraries set.  This is the
+                            default value when -ipp is specified on Windows
+            static        - link using the static libraries set.  This is the 
+                            default value when -ipp is specified on Linux 
+            static_thread - link using the optional threaded libraries set 
+                            Note: these are provided in a separate install kit
+
+
+
+            nonpic        - link using the version of the libraries that do not
+                            have position independent code
+            nonpic_crypto - link using the crypto library and the version of
+                            the libraries that do not have position independent
+                            code
+
+-mkl[=<arg>]
+          link to the Intel(R) Math Kernel Library (Intel(R) MKL) and bring
+          in the associated headers
+            parallel   - link using the threaded Intel(R) MKL libraries. This
+                         is the default when -mkl is specified
+            sequential - link using the non-threaded Intel(R) MKL libraries
+
+            cluster    - link using the Intel(R) MKL Cluster libraries plus
+                         the sequential Intel(R) MKL libraries
+
+-tbb      link to the Intel(R) Threading Building Blocks (Intel(R) TBB) 
+          libraries and bring in the associated headers
+
+-[no-]opt-subscript-in-range
+          assumes no overflows in the intermediate computation of the
+          subscripts
+
+-[no-]use-intel-optimized-headers
+          take advantage of the optimized header files
+
+-cilk-serialize
+          run a Cilk program as a C/C++ serialized program
+
+-[no-]intel-extensions
+          enable(DEFAULT)/disable C/C++ language extensions such as array
+          notation, Intel(R) Cilk(TM) Plus language extensions, and 
+          support for decimal floating-point types.
+
+-[no-]opt-matmul
+          replace matrix multiplication with calls to intrinsics and threading
+          libraries for improved performance (DEFAULT at -O3 -parallel)
+
+-[no-]simd
+          enables(DEFAULT)/disables vectorization using simd pragma
+
+-guide-opts=<arg>
+          tells the compiler to analyze certain code and generate 
+          recommendations that may improve optimizations
+
+-guide-file[=<filename>]
+          causes the results of guide to be output to a file
+
+-guide-file-append[=<filename>]
+          causes the results of guide to be appended to a file
+
+-guide[=<level>]
+          lets you set a level (1 - 4) of guidance for auto-vectorization,
+          auto-parallelization, and data transformation (DEFAULT is 4 when the
+          option is specified)
+
+-guide-data-trans[=<level>]
+          lets you set a level (1 - 4) of guidance for data transformation
+          (DEFAULT is 4 when the option is specified)
+
+-guide-par[=<level>]
+          lets you set a level (1 - 4) of guidance for auto-parallelization
+          (DEFAULT is 4 when the option is specified)
+
+-guide-vec[=<level>]
+          lets you set a level (1 - 4) of guidance for auto-vectorization
+          (DEFAULT is 4 when the option is specified)
+
+-guide-profile=<[file|dir]>[,[file|dir],...]
+          specify a loop profiler data file (or set of files in a directory)
+          when using the -guide option
+
+-opt-mem-layout-trans[=<level>]
+          controls the level of memory layout transformations performed by the
+          compiler
+           0 - disable memory layout transformations (same as
+               -no-opt-mem-layout-trans)
+           1 - enable basic memory layout transformations
+           2 - enable more memory layout transformations  (DEFAULT when the
+               option is specified)
+           3 - enable aggressive memory layout transformations
+
+-opt-prefetch[=n]
+          enable levels of prefetch insertion, where 0 disables.
+          n may be 0 through 4 inclusive.  Default is 2.
+
+-no-opt-prefetch
+          disable(DEFAULT) prefetch insertion.  Equivalent to -opt-prefetch=0
+
+-opt-prefetch-distance=n1[,n2]
+          specify the prefetch distance (how many iterations ahead, use n1 and
+          n2 values such that n1>=n2) to be used for compiler generated
+          prefetches inside loops.  n1 indicates distance from memory to L2
+          cache and n2 indicates distance from L2 to L1.  (Intel(R) MIC
+          Architecture specific)
+
+-opt-threads-per-core=n
+          specifies the number of threads (1 - 4) per core to be used for an
+          application (Intel(R) MIC Architecture specific)
+
+-opt-streaming-cache-evict=n
+          specifies the cache line eviction level (0 - 3) when streaming
+          loads/stores are used.  (Intel(R) MIC Architecture specific)
+
+-opt-assume-safe-padding
+          assume that variables and dynamically allocated memory are padded
+          (Intel(R) MIC Architecture specific)
+
+
+Profile Guided Optimization (PGO)
+---------------------------------
+
+
+
+-prof-dir <dir>
+          specify directory for profiling output files (*.dyn and *.dpi)
+
+-prof-src-root <dir>
+          specify project root directory for application source files to
+          enable relative path resolution during profile feedback on sources
+          below that directory
+
+-prof-src-root-cwd
+          specify the current directory as the project root directory for
+          application source files to enable relative path resolution during
+          profile feedback on sources below that directory
+
+-[no-]prof-src-dir
+          specify whether directory names of sources should be 
+          considered when looking up profile records within the .dpi file
+
+-prof-file <file>
+          specify file name for profiling summary file
+
+-[no-]prof-data-order
+          enable/disable(DEFAULT) static data ordering with profiling
+
+-[no-]prof-func-order
+          enable/disable(DEFAULT) function ordering with profiling
+
+-[no-]prof-func-groups
+          enable(DEFAULT with PGO)/disable function grouping
+
+-prof-gen[=keyword]
+          instrument program for profiling.
+          Optional keyword may be srcpos or globdata
+
+-no-prof-gen
+          disable profiling instrumentation
+
+-prof-use[=<arg>]
+          enable use of profiling information during optimization
+            weighted  - invokes profmerge with -weighted option to scale data
+                        based on run durations
+            [no]merge - enable(default)/disable the invocation of the profmerge
+                        tool
+
+-no-prof-use
+          disable use of profiling information during optimization
+
+-p        compile and link for function profiling with UNIX gprof tool
+          On IA32 and Intel(r)64, -pg is also valid
+
+-f[no-]instrument-functions
+          determine whether function entry and exit points are instrumented
+
+-prof-hotness-threshold=<val>
+          set the hotness threshold for function grouping and function ordering
+          val indicates percentage of functions to be placed in hot region.
+          This option requires -prof-use 
+           and -prof-func-groups or -prof-func-order
+          
+
+-prof-value-profiling=<arg>[,<arg>,...]
+          limit value profiling
+            none      - inhibit all types of value profiling
+            nodivide  - inhibit value profiling of non-compile time constants
+                        used in division or remainder operations
+            noindcall - inhibit value profiling of function addresses at
+                        indirect call sites
+
+-profile-functions
+          enable instrumentation in generated code for collecting
+          function execution time profiles
+
+-profile-loops:<arg>
+          enable instrumentation in generated code for collecting
+          loop execution time profiles
+             inner    - instrument inner loops
+             outer    - instrument outer loops
+             all      - instrument all loops
+
+-profile-loops-report:<arg>
+          Control the level of instrumentation inserted for reporting loop
+          execution profiles
+             1    - report loop times
+             2    - report loop times and iteration counts
+
+
+Optimization Reports
+--------------------
+
+
+
+-vec-report[n]
+          control amount of vectorizer diagnostic information
+            n=0    no diagnostic information
+            n=1    indicate vectorized loops (DEFAULT when enabled)
+            n=2    indicate vectorized/non-vectorized loops
+            n=3    indicate vectorized/non-vectorized loops and prohibiting
+                   data dependence information
+            n=4    indicate non-vectorized loops
+            n=5    indicate non-vectorized loops and prohibiting data
+                   dependence information
+            n=6    indicate vectorized/non-vectorized loops with greater
+                   details and prohibiting data dependence information
+            n=7    indicate vector code quality message ids and data values
+                   for vectorized loops
+
+-opt-report [n]
+          generate an optimization report to stderr
+            0   disable optimization report output
+            1   minimum report output
+            2   medium output (DEFAULT when enabled)
+            3   maximum report output
+
+-opt-report-file=<file>
+          specify the filename for the generated report
+
+-opt-report-phase=<phase>
+          specify the phase that reports are generated against
+
+-opt-report-routine=<name>
+          reports on routines containing the given name
+
+-opt-report-help
+          display the optimization phases available for reporting
+
+-tcheck [mode]
+          enable analysis of threaded applications (requires Intel(R) Thread
+          Checker; cannot be used with compiler alone)
+            tci - instruments a program to perform a thread-count-independent
+                  analysis
+            tcd - instruments a program to perform a thread-count-dependent
+                  analysis (DEFAULT when mode is not used)
+            api - instruments a program at the api-imports level
+
+-tcollect[=<lib>]
+          inserts instrumentation probes calling the Intel(R) Trace Collector
+          API.  The library -l<lib> is linked in the default being -lVT
+          (requires Intel(R) Trace Collector)
+
+-tcollect-filter file
+          Enable or disable the instrumentation of specified functions. 
+          (requires Intel(R) Trace Collector)
+
+
+OpenMP* and Parallel Processing
+------------------------------
+
+
+
+-openmp   enable the compiler to generate multi-threaded code based on the
+          OpenMP* directives (same as -fopenmp)
+
+-openmp-stubs
+          enables the user to compile OpenMP programs in sequential mode.  The
+          OpenMP directives are ignored and a stub OpenMP library is linked
+          (sequential)
+
+-openmp-report{0|1|2}
+          control the OpenMP parallelizer diagnostic level
+
+-openmp-lib <ver>
+          choose which OpenMP library version to link with
+            compat - use the GNU compatible OpenMP run-time libraries
+                     (DEFAULT)
+
+-openmp-link <library>
+          choose whether to link with the static or dynamic OpenMP
+          libraries.  Default is dynamic.
+
+-openmp-task <arg>
+          choose which OpenMP tasking model to support
+            omp   - support OpenMP 3.0 tasking (DEFAULT)
+            intel - support Intel taskqueuing
+
+-openmp-threadprivate=<ver>
+          choose which threadprivate implementation to use
+            compat - use the GNU compatible thread local storage
+            legacy - use the Intel compatible implementation
+                     (DEFAULT)
+
+-parallel
+          enable the auto-parallelizer to generate multi-threaded code for
+          loops that can be safely executed in parallel
+
+-par-report{0|1|2|3}
+          control the auto-parallelizer diagnostic level
+
+-par-threshold[n]
+          set threshold for the auto-parallelization of loops where n is an
+          integer from 0 to 100
+
+-par-runtime-control[n]
+          Control parallelizer to generate runtime check code for effective 
+          automatic parallelization.
+            n=0    no runtime check based auto-parallelization 
+            n=1    generate runtime check code under conservative mode 
+                   (DEFAULT when enabled)
+            n=2    generate runtime check code under heuristic mode
+            n=3    generate runtime check code under aggressive mode
+
+-par-schedule-static[=n]
+          Specifies a scheduling algorithm for DO loop iteration.
+          Divides iterations into contiguous pieces.  Size n if
+          specified, equal sized pieces if not.
+
+-par-schedule-static_balanced[=n]
+          Divides iterations into even-sized chunks.  Size n if
+          specified, equal sized pieces if not.
+
+-par-schedule-static-steal[=n]
+          Divides iterations into even-sized chunks, but allows
+          threads to steal parts of chunks from neighboring threads
+
+-par-schedule-dynamic[=n]
+          Specifies a scheduling algorithm for DO loop iteration.
+          Assigns iterations to threads in chunks dynamically.
+          Chunk size is n iterations if specified, otherwise 1.
+
+-par-schedule-guided[=n]
+          Specifies a scheduling algorithm for DO loop iteration.
+          Indicates a minimum number of iterations.  If specified,
+          n is the minimum number, otherwise 1.
+
+-par-schedule-guided-analytical[=n]
+          Divides iterations by using exponential distribution or 
+          dynamic distributions.
+
+-par-schedule-runtime
+          Specifies a scheduling algorithm for DO loop iteration.
+          Defers the scheduling decision until runtime.
+
+-par-schedule-auto
+          Lets the compiler or run-time system determine the 
+          scheduling algorithm.
+
+-par-affinity=[<modifier>,...]<type>[,<permute>][,<offset>] 
+          tune application performance by setting different thread affinity
+
+-par-num-threads=<n>
+          tune application performance by setting different number of threads 
+
+-parallel-source-info[=n]
+          enable(DEFAULT)/disable the emission of source location information
+          for parallel code generation with OpenMP and auto-parallelization
+            0 - disable (same as -no-parallel-source-info)
+            1 - emit routine name and line information (DEFAULT)
+            2 - emit path, file, routine name and line information
+
+
+Floating Point
+--------------
+
+
+
+-fp-model <name>
+          enable <name> floating point model variation
+            [no-]except - enable/disable floating point semantics
+            fast[=1|2]  - enables more aggressive floating point optimizations
+            precise     - allows value-safe optimizations
+            source      - enables intermediates in source precision
+            strict      - enables -fp-model precise -fp-model except, disables
+                          contractions and enables pragma stdc fenv_access
+
+            double      - rounds intermediates in 53-bit (double) precision
+            extended    - rounds intermediates in 64-bit (extended) precision
+
+-fp-speculation=<mode>
+          enable floating point speculations with the following <mode>
+          conditions:
+            fast   - speculate floating point operations (DEFAULT)
+            safe   - speculate only when safe
+            strict - same as off
+            off    - disables speculation of floating-point operations
+
+-pc32     set internal FPU precision to 24 bit significand
+
+-pc64     set internal FPU precision to 53 bit significand
+
+-pc80     set internal FPU precision to 64 bit significand (DEFAULT)
+
+-mp1      improve floating-point precision (speed impact less than -mp)
+
+-mieee-fp
+          same as -mp, can be disabled with -mno-ieee-fp
+
+-[no-]prec-sqrt
+          determine if certain square root optimizations are enabled
+
+-[no-]prec-div
+          improve precision of FP divides (some speed impact)
+
+-[no-]fast-transcendentals
+          generate a faster version of the transcendental functions
+
+-[no-]fp-port
+          round fp results at assignments and casts (some speed impact)
+
+-fp-stack-check
+          enable fp stack checking after every function/procedure call
+
+-rcd      rounding mode to enable fast float-to-int conversions
+
+-[no-]ftz
+          enable/disable flush denormal results to zero
+
+-[no-]fma
+          enable/disable the combining of floating point multiplies and
+          add/subtract operations
+
+-fp-trap=<arg>[,<arg>,...]
+          control floating point traps at program start.  <arg> can be of the
+          following values
+            [no]divzero   - [Do not] trap on division by zero
+            [no]inexact   - [Do not] trap on inexact result
+            [no]invalid   - [Do not] trap on invalid operation
+            [no]overflow  - [Do not] trap on overflow
+            [no]underflow - [Do not] trap on underflow
+            [no]denormal  - [Do not] trap on denormal
+            all           - enable trap on all of the above
+            none          - trap on none of the above
+            common        - trap on most commonly used IEEE traps
+                            (invalid, division by zero, overflow)
+
+-fp-trap-all=<arg>[,<arg>,...]
+          control floating point traps in every routine.  <arg> can be of the
+          values specified in -fp-trap
+
+
+Inlining
+--------
+
+
+
+-inline-level=<n>
+          control inline expansion:
+            n=0  disable inlining
+            n=1  inline functions declared with __inline, and perform C++
+                 inlining
+            n=2  inline any function, at the compiler's discretion 
+
+-f[no-]inline
+          inline functions declared with __inline, and perform C++ inlining
+
+-f[no-]inline-functions
+          inline any function at the compiler's discretion
+
+-finline-limit=<n>
+          set maximum number of statements a function can have and still be
+          considered for inlining
+
+-fgnu89-inline
+           use C89 semantics for "inline" functions when in C99 mode
+
+-inline-min-size=<n>
+          set size limit for inlining small routines
+
+-no-inline-min-size
+          no size limit for inlining small routines
+
+-inline-max-size=<n>
+          set size limit for inlining large routines
+
+-no-inline-max-size
+          no size limit for inlining large routines
+
+-inline-max-total-size=<n>
+          maximum increase in size for inline function expansion
+
+-no-inline-max-total-size
+          no size limit for inline function expansion
+
+-inline-max-per-routine=<n>
+          maximum number of inline instances in any function
+
+-no-inline-max-per-routine
+          no maximum number of inline instances in any function
+
+-inline-max-per-compile=<n>
+          maximum number of inline instances in the current compilation
+
+-no-inline-max-per-compile
+          no maximum number of inline instances in the current compilation
+
+-inline-factor=<n>
+          set inlining upper limits by n percentage
+
+-no-inline-factor
+          do not set set inlining upper limits
+
+-inline-forceinline
+          treat inline routines as forceinline
+
+-inline-calloc
+          directs the compiler to inline calloc() calls as malloc()/memset()
+
+
+Output, Debug, PCH
+------------------
+
+
+
+-c        compile to object (.o) only, do not link
+
+-S        compile to assembly (.s) only, do not link
+
+-fsource-asm
+          produce assembly file with optional source annotations (requires -S)
+
+-f[no-]verbose-asm
+          produce assembly file with compiler comments (DEFAULT) (requires -S)
+
+-fcode-asm
+          produce assembly file with optional code annotations (requires -S)
+
+-use-msasm
+          support Microsoft* style assembly language insertion using MASM style
+          syntax
+
+-fasm-blocks
+          enables the use of blocks and entire functions of assembly code
+          within a C or C++ file
+
+-Fa[file]
+          name assembly file (or directory for multiple files; i.e. /FaMYDIR)
+
+-Fo[file]
+          name object file (or directory for multiple files; i.e. /FoMYDIR)
+
+-o <file>
+          name output file
+
+-g        produce symbolic debug information in object file (implies -O0 when
+          another optimization option is not explicitly set)
+
+-debug [keyword]
+          enable debug information and control output of enhanced debug
+          information
+            keywords:  all, full, minimal, none, [no]inline-debug-info
+
+                       [no]variable-locations, [no]semantic-stepping,
+                       extended, [no]pubnames
+
+                       parallel
+
+                       [no]expr-source-pos
+
+-fvar-tracking
+          same as -debug variable_locations
+
+-fvar-tracking-assignments
+          same as -debug semantic_stepping
+
+-g0       disable generation of symbolic debug information
+
+-gdwarf-2
+          enable generation of debug information using the DWARF2 format
+
+-gdwarf-3
+          enable generation of debug information using the DWARF3 format
+
+-grecord-gcc-switches
+          record command line options in the DW_AT_producer attribute in
+          the DWARF debugging information
+
+-fno-merge-debug-strings
+          do not merge identical debug strings in different object files
+
+-fno-merge-constants
+          do not merge identical string constants in different object files
+
+-ftrapuv  trap uninitialized variables
+
+-map-opts
+          enable option mapping tool
+
+-print-multi-lib
+          print information about libraries being used
+
+-pch-create <file>
+          create precompiled header file
+
+-pch-use <file>
+          use precompiled header file
+
+-pch      enable automatic precompiled header file creation/usage
+
+-pch-dir <dir>
+          name precompiled header directory
+
+-check-pointers=<arg>
+          Specifies what type of bounds checking occurs. Possible values are:
+            none   - Disables bounds checking. This is the default.
+            rw     - Checks bounds for reads and writes through pointers.
+            write  - Checks bounds for writes through pointers only.
+          This switch is only valid with Intel(R) Parallel Studio XE 
+
+-check-pointers-dangling=<arg>
+          Specifies what type of dangling pointer checking occurs. Possible
+          values are:
+            none   - Disables dangling pointer checking. This is the default.
+            heap   - Check dangling references on heap.
+            stack  - Check dangling references on stack.
+            all    - Check dangling references on both heap and stack.
+          This switch is only valid with Intel(R) Parallel Studio XE 
+
+-[no-]check-pointers-undimensioned
+          Bounds checking occurs for memory access through arrays that are
+          declared without dimensions. This checking occurs for both
+          dimensioned and undimensioned arrays.
+          This switch is only valid with Intel(R) Parallel Studio XE
+
+
+Preprocessor
+------------
+
+
+
+-A<name>[<val>]
+          create an assertion <name> having value <val>
+
+-C        do not strip comments
+
+-D<name>[=<text>]
+          define macro
+
+-U<name>  remove predefined macro
+
+-E        preprocess to stdout
+
+-EP       preprocess to stdout, omitting #line directives
+
+-P        preprocess to file, omitting #line directives
+
+-I<dir>   add directory to include file search path
+
+-idirafter<dir>
+          add directory to the second include file search path (after -I)
+
+-isystem<dir>
+          add directory to the start of the system include path
+
+-X, -nostdinc
+          remove standard directories from include file search path
+
+-nostdinc++
+          remove standard C++ directories from include file search path
+
+-iprefix <prefix>
+          use <prefix> with -iwithprefix as a prefix
+
+-iwithprefix <dir>
+          append <dir> to the prefix passed in by -iprefix and put it on the
+          include search path at the end of the include directories
+
+-iwithprefixbefore <dir>
+          similar to -iwithprefix except the include directory is placed in the
+          same place as -I command line include directories
+
+-iquote <dir>
+          add directory to the front of the include file search path for files
+          included with quotes, but not brackets
+
+-imacros <file>
+          treat <file> as an #include file, but throw away all preprocessing
+          while macros defined remain defined
+
+-H        print include file order
+
+-B<prefix>
+          find libraries, headers and executables in <prefix>
+
+-M        generate makefile dependency information
+
+-MM       similar to -M, but do not include system header files
+
+-MG       similar to -M, but treat missing header files as generated files
+
+-MD       preprocess and compile, generating output file containing dependency
+          information ending with extension .d
+
+-MMD      similar to -MD, but do not include system header files
+
+-MF<file>
+          generate makefile dependency information in file (must specify -M
+          or -MM)
+
+-MP       add a phony target for each dependency
+
+-MT<target>
+          change the default target rule for dependency generation
+
+-MQ<target>
+          same as -MT, but quotes special Make characters
+
+-dM       output macro definitions in effect after preprocessing (use with -E)
+
+-dD       same as -dM, but output #define directives in preprocessed source
+
+-dN       same as -dD, but #define directives contain only macro names
+
+-gcc      Predefine the "__GNUC__", "__GNUC_MINOR__", and 
+          "__GNUC_PATCHLEVEL__" macros (DEFAULT)
+
+-no-gcc   Do not predefine GNUC macros listed in -gcc mode. Warning: can
+          prevent correct system header compilation, see -gcc-sys
+
+-gcc-sys  same as -no-gcc, except that the GNU macros are defined only while
+          preprocessing the system include headers
+
+-no-icc   do not predefine the "__ICC" and "__INTEL_COMPILER" macros. 
+          Warning: can prevent correct Intel header compilation
+
+-pragma-optimization-level=[Intel|GCC]
+          process #pragma optimize using Intel (DEFAULT) or GCC syntax
+
+
+Component Control
+-----------------
+
+
+
+-Qoption,<tool>,<opts>
+          pass options <opts> to tool specified by <tool>
+
+-Qlocation,<tool>,<dir>
+          set <dir> as the location of tool specified by <tool>
+
+-Qinstall <dir>
+          set <dir> as root of compiler installation
+
+
+Language
+--------
+
+
+
+-std=<std>
+          enable language support for <std>, as described below
+            c99   enable C99 support for C programs
+            c++11 enable C++11 experimental support for C++ programs
+            c++0x same as c++11
+
+-x <type>
+          all source files found subsequent to -x <type> will be recognized
+          as one of the following types:
+              c                  - C source file
+              c++                - C++ source file
+              c-header           - C header file
+              cpp-output         - C pre-processed file
+              c++-cpp-output     - C++ pre-processed file
+              assembler          - assembly file
+              assembler-with-cpp - assembly file that needs to be preprocessed
+              none               - revert to original file extension
+
+-ansi     equivalent to GNU -ansi
+
+-strict-ansi 
+          strict ANSI conformance dialect
+
+-Zp[n]    specify alignment constraint for structures where 
+          n=1,2,4,8,16. 16 is the default
+
+-fsyntax-only
+          perform syntax and semantic checking only (no object file produced)
+
+-trigraphs
+          support ISO C trigraphs (enabled in -ansi mode)
+
+-fpermissive
+          allows extensions for some non-conformant code
+
+-funsigned-char
+          change default char type to unsigned
+
+-fshort-enums
+          allocate as many bytes as needed for enumerated types
+
+-f[no-]unsigned-bitfields
+          change default bitfield type to unsigned
+
+-fno-rtti
+          disable RTTI support
+
+-fno-implicit-templates
+          never emit code for non-inline templates which are instantiated
+          implicitly; only emit code for explicit instantiations
+
+-fno-implicit-inline-templates
+          do not emit code for implicit instantiations of inline templates
+
+-ftemplate-depth-[n]
+          control the depth in which recursive templates are expanded
+
+-[no]align
+          analyze and reorder memory layout for variables and arrays
+
+-[no-]restrict
+          enable/disable the 'restrict' keyword for disambiguating pointers
+
+-[no-]early-template-check
+          enable/disable (DEFAULT) semantic checking of function template
+          prototypes (before instantiation).
+
+-help-pragma
+          output supported pragmas and their usage syntax
+
+-ffriend-injection
+          inject friend functions into the enclosing namespace.  Use
+          -fno-friend-injection to disable
+
+-check=<keyword>[,<keyword>,...]
+          check run-time conditions.
+          keywords:  [no]conversions, [no]stack, [no]uninit
+
+
+Compiler Diagnostics
+--------------------
+
+
+
+-w        disable all warnings
+
+-w<n>     control diagnostics
+            n = 0    enable errors only (same as -w)
+            n = 1    enable warnings and errors (DEFAULT)
+            n = 2    enable verbose warnings, warnings and errors
+            n = 3    enable remarks, verbose warnings, warnings and errors
+
+-Wbrief   print brief one-line diagnostics
+
+-Werror   force warnings to be reported as errors
+
+-Werror-all
+          force warnings and currently enabled remarks to be reported as errors
+
+-Wall     enable all warnings
+
+-Wremarks
+          enable all remarks and comments
+
+-Wcheck   enable more strict diagnostics
+
+-Weffc++  enable effective C++ diagnostic warnings
+
+-wo<L1>[,<L2>,...]
+          issue diagnostics L1 through LN only once
+
+-W[no-]fatal-errors
+          ends compilation after the first error encountered
+
+-W[no-]format
+          enable argument checking for calls to printf, scanf, etc
+
+-W[no-]format-security
+          warn for uses of format strings and specifiers in printf,
+          scanf, etc that may introduce security problems
+
+-W[no-]missing-declarations
+          warn for global functions and variables without prior declaration
+
+-W[no-]missing-prototypes
+          warn for missing prototypes
+
+-W[no-]strict-aliasing
+         warn for code that might violate the optimizer's strict aliasing
+         rules. Warnings are issued only when using -fstrict-aliasing or
+         -ansi-alias.
+
+-W[no-]strict-prototypes
+          warn for functions declared or defined without specified argument
+          types
+
+-W[no-]pointer-arith
+          warn for questionable pointer arithmetic
+
+-W[no-]uninitialized
+          warn if a variable is used before being initialized
+
+-Winline  enable inline diagnostics
+
+-W[no-]deprecated
+          print warnings related to deprecated features
+
+-W[no-]abi
+          warn if generated code is not C++ ABI compliant
+
+-Wcontext-limit=<n>
+          set maximum number of template instantiation contexts shown in
+          diagnostic
+
+-Wcast-qual
+          warn if cast is used to override pointer type qualifier
+
+-W[no-]unused-function
+          warn if declared function is not used
+
+-W[no-]unused-parameter
+          warn if declared function parameter is not used
+
+-W[no-]unknown-pragmas
+          warn if an unknown #pragma directive is used (DEFAULT)
+
+-W[no-]main
+          warn if return type of main is not expected
+
+-W[no-]comment[s]
+          warn when   comment
+
+-W[no-]conversion
+          warn for implicit conversions that may alter a value
+
+-W[no-]return-type
+          warn when a function uses the default int return type and warn when
+          a return statement is used in a void function
+
+-W[no-]extra-tokens
+          warn about extra tokens after preprocessor directives
+
+-W[no-]pragma-once
+          warn about the use of #pragma once
+
+-W[no-]invalid-pch
+          warn about problems with existing precompiled headers
+
+-W[no-]shadow
+          warn when a variable declaration hides a previous declaration
+
+-Woverloaded-virtual
+          warn when a function declaration hides virtual functions from a base
+          class
+
+-W[no-]trigraphs
+          warn about the recognition and conversion of trigraphs
+
+-W[no-]multichar
+          warn if a multicharacter constant ('ABC') is used
+
+-W[no-]overflow
+          warn for operations that could result in integer overflow
+
+-Wwrite-strings
+          Issues a diagnostic message if const char * is converted 
+          to (non-const) char *.
+
+-W[no-]sign-compare
+          warn for comparisons between signed and unsigned values that
+          could produce unintended results after sign conversion
+
+-Wp64     print diagnostics for 64-bit porting
+
+-W[no-]shorten-64-to-32
+          warn for values implicitly converted from a 64-bit to a 32-bit type.
+          Similar to -Wp64
+
+-[no]traceback
+          specify whether the compiler generates data to allow for source file
+          traceback information at runtime (only to be used when linking with
+          Fortran programs)
+
+-diag-enable <v1>[,<v2>,...]
+          enable the specified diagnostics or diagnostic groups
+
+-diag-disable <v1>[,<v2>,...]
+          disable the specified diagnostics or diagnostic groups
+
+          where <vN> may be individual diagnostic numbers or group names.
+          where group names include:
+
+              sc[n]      - perform source code analysis: n=1 for critical
+                           errors, n=2 for all errors and n=3 for all errors
+                           and warnings
+  
+  sc-
+  {full|concise|precise} - perform static analysis and determine the analysis
+                           mode. 
+                           Full mode - attempts to find all program weaknesses,
+                           even at the expense of more false positives.
+                           Concise mode - attempts to reduce false positives
+                           somewhat more than reducing false negatives.
+                           Precise mode - attempts to avoid all false positives
+                           Default: full if -diag-enable sc{[1|2|3]} is 
+                           present; otherwise None 
+                           (static analysis diagnostics are disabled).
+                           
+              sc-include - perform source code analysis on include files
+              
+          sc-single-file - This option tells static analysis to process each
+                           file individually.
+                           Default: OFF
+
+                sc-enums - This option tells static analysis to treat
+                           enumeration variables as known values equal to any
+                           one of the associated enumeration literals.
+                           Default: OFF
+
+              sc-parallel[n] - perform analysis of parallelization in 
+                               source code: n=1 for critical errors,
+                               n=2 for errors, n=3 for all errors and 
+                               warnings
+
+              thread     - enable diagnostics to aid in thread-enabling source
+
+              port-win   - enable diagnostics for GNU extensions that may
+                           cause errors when porting to Windows
+
+              warn   - diagnostic messages that have "warning" severity level.
+              error  - diagnostic messages that have "error" severity level.
+              remark - diagnostic messages that are remarks or comments.
+
+              vec    - diagnostic messages issued by the vectorizer.
+              par    - diagnostic messages issued by the auto-parallelizer 
+              openmp - diagnostic messages issued by the OpenMP* parallelizer.
+              cpu-dispatch Specifies the CPU dispatch remarks. 
+
+-diag-error <v1>[,<v2>,...]
+          output the specified diagnostics or diagnostic groups as errors
+
+-diag-warning <v1>[,<v2>,...]
+          output the specified diagnostics or diagnostic groups as warnings
+
+-diag-remark <v1>[,<v2>,...]
+          output the the specified diagnostics or diagnostic groups as remarks
+
+-diag-dump
+          display the currently enabled diagnostic messages to stdout or to a
+          specified diagnostic output file.
+
+-diag-sc-dir=<dir>
+          <dir> directory where diagnostics from static analysis are created,
+          rather than current working directory.
+
+-diag-file[=<file>]
+          <file> where diagnostics are emitted to.  Not specifying this causes
+          messages to be output to stderr
+
+-diag-file-append[=<file>]
+          <file> where diagnostics are emitted to. When <file> already exists,
+          output is appended to the file
+
+-[no-]diag-id-numbers
+          enable(DEFAULT)/disable the diagnostic specifiers to be output in
+          numeric form
+
+-diag-error-limit <num>
+          specify the maximum number of errors emitted
+
+-diag-once <v1>[,<v2>,...]
+          issue diagnostics v1 through vN only once
+
+-W[no-]pch-messages
+          enable(DEFAULT)/disable PCH information messages
+
+
+Miscellaneous
+-------------
+
+
+
+-V        display compiler version information
+
+-dumpversion
+          display the compiler version number only
+
+-dumpmachine
+          display the target machine only
+
+--version
+          display GCC style version information
+
+-sox[=<keyword>[,keyword]]
+          enable saving of compiler options, version and additional information
+          in the executable.  Use -no-sox to disable(DEFAULT)
+            profile - include profiling data
+            inline  - include inlining information
+
+-save-temps
+          store the intermediate files in current directory and name them
+          based on the source file.  Only saves files that are generated by
+          default
+
+-dryrun   show driver tool commands but do not execute tools
+
+-v        show driver tool commands and execute tools
+
+-watch=<keyword>
+          tells the driver to output processing information
+            keywords: all, none (same as -nowatch), [no]source,
+                      [no]cmd (same as -v)
+
+                      [no]mic-cmd
+
+-nowatch  suppress processing information output (DEFAULT)
+
+-[no-]multibyte-chars
+          provide support for multi-byte characters
+
+-multiple-processes[=<n>]
+          create multiple processes that can be used to compile large numbers
+          of source files at the same time
+
+
+Offload
+-------
+
+
+
+-offload-attribute-target=<name>
+          flags every global routine and global data object in the source
+          file with the offload attribute target(mic)
+
+-offload-option,<target>,<tool>,"option list"
+          appends additional options for offload compilations given the
+          target and tool.  The option list is a space separated quoted list
+          of options
+            target - mic
+            tool   - compiler, ld, as
+
+-no-offload
+          disable any offload usage
+
+
+Data
+----
+
+
+
+-Zp[n]    specify alignment constraint for structures (n=1,2,4,8,16
+          -Zp16 DEFAULT)
+
+-fminshared
+          Compilation is for the main executable. Absolute addressing can be
+          used and non-position independent code generated for symbols that
+          are at least protected
+
+-fcommon  Enables the compiler to treat common variables as if they were
+          defined.  That in turn allows the use of gprel addressing of common
+          data variables.  -fno-common disables
+
+-freg-struct-return
+          return struct and union values in registers when possible
+
+-fstack-security-check
+          enable overflow security checks.  
+          -f[no-]stack-security-check disables (DEFAULT)
+
+-fstack-protector
+          enable stack overflow security checks.
+          -f[no-]stack-protector disables (DEFAULT)
+
+-fstack-protector-all
+          enable stack overflow security checks including functions.
+          -f[no-]stack-protector-all disables (DEFAULT)
+
+-fpic, -fPIC
+          generate position independent code (-fno-pic/-fno-PIC is DEFAULT)
+
+-fpie, -fPIE
+          generate position independent code that will be linked into an
+          executable (-fno-pie/-fno-PIE is DEFAULT)
+
+-auto-ilp32
+           specify that the application cannot exceed a 32-bit address space
+           (-ipo[n] required)
+
+-auto-p32  instructs the compiler to analyze the program to determine if there
+           are 64-bit pointers that can be safely shrunk to 32-bit pointers.
+           (-ipo required)
+
+-[no-]global-hoist
+          enable(DEFAULT)/disable external globals are load safe
+
+-f[no-]keep-static-consts
+          enable/disable(DEFAULT) emission of static const variables even
+          when not referenced
+
+-fpack-struct
+          pack structure members together
+
+-f[no-]math-errno
+          set ERRNO after calling standard math library functions
+
+-no-bss-init
+          disable placement of zero-initialized variables in BSS (use DATA)
+
+-f[no-]zero-initialized-in-bss
+          put explicitly zero initialized variables into the DATA section
+          instead of the BSS section
+
+-mcmodel=<size>
+          use a specific memory model to generate code and store data
+            small  - Restricts code and  data to the first 2GB of address 
+                     space (DEFAULT)
+            medium - Restricts code to the first 2GB; it places no memory
+                     restriction on data
+            large  - Places no memory restriction on code or data
+
+-falign-functions=[2|16]
+          align the start of functions on a 2 (DEFAULT) or 16 byte boundary
+
+-falign-functions
+          align the start of functions to an optimal machine-dependent value.
+          -fno-align-functions (DEFAULT) aligns on a 2-byte boundary
+
+-fvisibility=[extern|default|protected|hidden|internal]
+          Global symbols (data and functions) will get the visibility 
+          attribute given by default. Symbol visibility attributes explicitly
+          set in the source code or using the symbol visibility attribute
+          file options will override the -fvisibility setting
+
+-fvisibility-extern=<file>
+          Space separated symbols listed in the <file> argument will get
+          visibility set to extern
+
+-fvisibility-default=<file>
+          Space separated symbols listed in the <file> argument will get
+          visibility set to default
+
+-fvisibility-protected=<file>
+          Space separated symbols listed in the <file> argument will get
+          visibility set to protected
+
+-fvisibility-hidden=<file>
+          Space separated symbols listed in the <file> argument will get
+          visibility set to hidden
+
+-fvisibility-internal=<file>
+          Space separated symbols listed in the <file> argument will get
+          visibility set to internal
+
+-fvisibility-inlines-hidden
+          mark inline member functions as hidden
+
+-fimf-absolute-error=value[:funclist]
+          define the maximum allowable absolute error for math library
+          function results
+            value    - a positive, floating-point number conforming to the
+                       format [digits][.digits][{e|E}[sign]digits]
+            funclist - optional comma separated list of one or more math
+                       library functions to which the attribute should be
+                       applied
+
+-fimf-accuracy-bits=bits[:funclist]
+          define the relative error, measured by the number of correct bits,
+          for math library function results
+            bits     - a positive, floating-point number
+            funclist - optional comma separated list of one or more math
+                       library functions to which the attribute should be
+                       applied
+
+-fimf-arch-consistency=value[:funclist]
+          ensures that the math library functions produce consistent results
+          across different implementations of the same architecture
+            value    - true or false
+            funclist - optional comma separated list of one or more math
+                       library functions to which the attribute should be
+                       applied
+
+-fimf-max-error=ulps[:funclist]
+          defines the maximum allowable relative error, measured in ulps, for
+          math library function results
+            ulps     - a positive, floating-point number conforming to the
+                       format [digits][.digits][{e|E}[sign]digits]
+            funclist - optional comma separated list of one or more math
+                       library functions to which the attribute should be
+                       applied
+
+-fimf-precision=value[:funclist]
+          defines the accuracy (precision) for math library functions
+            value    - defined as one of the following values
+                       high   - equivalent to max-error = 0.6
+                       medium - equivalent to max-error = 4 (DEFAULT)
+                       low    - equivalent to accuracy-bits = 11 (single
+                                precision); accuracy-bits = 26 (double
+                                precision)
+            funclist - optional comma separated list of one or more math
+                       library functions to which the attribute should be
+                       applied
+
+-fimf-domain-exclusion=classlist[:funclist]
+          indicates the domain on which a function is evaluated
+
+
+Compatibility
+-------------
+
+
+
+-gcc-name=<name>
+          name and location of gcc if not where expected
+
+-gxx-name=<name>
+          name and location of g++ if not where expected
+
+-fabi-version=<val>
+          directs the compiler to select a specific ABI implementation
+            0 - most recent ABI implementation
+            1 - g++ 3.2 compatible ABI implementation
+            2 - most conformant ABI implementation
+
+-fms-dialect[=<arg>]
+          enable compatibility with a specific Microsoft* Visual Studio
+          version
+            9   - Microsoft* Visual Studio 2008 compatibility
+            10  - Microsoft* Visual Studio 2010 compatibility
+            11  - Microsoft* Visual Studio 2012 compatibility
+
+
+Linking/Linker
+--------------
+
+
+
+-L<dir>   instruct linker to search <dir> for libraries
+
+-l<string>
+          instruct the linker to link in the -l<string> library
+
+-shared-intel
+          link Intel provided libraries dynamically
+
+-static-intel
+          link Intel provided libraries statically
+
+-shared-libgcc
+          link libgcc dynamically
+
+-static-libgcc
+          link libgcc statically
+
+-static-libstdc++
+          link libstdc++ statically
+
+-dynamic-linker<file>
+          select dynamic linker other than the default
+
+-no-cxxlib
+          do not link in C++ runtime libraries
+
+-cxxlib[=dir]
+          link using C++ run-time libraries provided with gcc dir is an
+          optional top-level location for the gcc binaries and libraries
+
+-nodefaultlibs
+          do not use standard libraries when linking
+
+-nostartfiles
+          do not use standard startup files when linking
+
+-nostdlib
+          do not use standard libraries and startup files when linking
+
+-static   prevents linking with shared libraries
+
+-shared   produce a shared object
+
+-Bstatic  specify following libraries are linked statically
+
+-Bdynamic
+          specify following libraries are linked dynamically
+
+-pthread  use POSIX* thread library for multithreading support
+
+-cxxlib-<mode>
+          tell the compiler which C++ run-time libraries to use
+            nostd - do not link in standard C++ library
+
+-u <symbol>
+          pretend the <symbol> is undefined
+
+-T <file>
+          direct linker to read link commands from <file>
+
+-Xlinker <val>
+          pass <val> directly to the linker for processing
+
+-Wa,<o1>[,<o2>,...]
+          pass options o1, o2, etc. to the assembler
+
+-Wl,<o1>[,<o2>,...]
+          pass options o1, o2, etc. to the linker for processing
+
+-Wp,<o1>[,<o2>,...]
+          pass options o1, o2, etc. to the preprocessor
+
+-pie,-no_pie
+          generate position independent code that will be linked into an
+          executable (-pie is DEFAULT for Mac OS X 10.7 and later)
+          -no-pie/-no_pie disables position independent code
+
+
+Linker Specific Options
+-----------------------
+
+These options are specific to the linker.  Details can be found in the linker
+documentation and man page
+
+-L<dir>
+-T<arg>
+-h<arg>
+-u<arg>
+-z<arg>
+-i
+-r
+-s
+-N
+-Bsymbolic
+
+-Bdynamic
+-Bstatic
+
+
+Deprecated Options
+------------------
+
+
+
+-export                  No replacement
+-export-dir              No replacement
+-Ob                      use -inline-level=<n>
+-i-dynamic               use -shared-intel
+-i-static                use -static-intel
+-inline-debug-info       use -debug inline-debug-info
+-mp                      use -fp-model <arg>
+-use-asm                 No replacement
+-prof-genx               use -prof-gen=srcpos
+-gcc-version             use -gcc-name=<name>
+
+-tprofile                No replacement
+
+-xK                      use -mia32
+-axK                     use -mia32
+-xW                      use -msse2
+-axW                     use -msse2
+-xN                      use -xSSE2
+-axN                     use -axSSE2
+
+-xP                      use -xSSE3
+-axP                     use -axSSE3
+-xT                      use -xSSSE3
+-axT                     use -axSSSE3
+-xS                      use -xSSE4.1
+-axS                     use -axSSE4.1
+-xO                      use -msse3
+-xSSE3_ATOM              use -xSSSE3_ATOM
+
+-diag-enable sv<n>       use -diag-enable sc<n>
+-diag-enable sv-include  use -diag-enable sc-include
+-diag-disable sv         use -diag-disable sc
+-diag-sv                 use -diag-enable sc
+-diag-sv-error           use -diag-disable warning
+-diag-sv-include         use -diag-enable sc-include
+-diag-sv-level           No replacement
+-diag-sv-sup             use -diag-disable <v1>[,<v2>,...]
+
+-A-                      use -U<arg>
+-c99                     use -std=c99
+-[no-]check-uninit       use -check=[no]uninit
+-fwritable-strings       no replacement
+-Kc++                    use -x c++
+-wn                      use -diag-error-limit
+-wd                      use -diag-disable
+-we                      use -diag-error
+-ww                      use -diag-warning
+-wr                      use -diag-remark
+-wo                      use -diag-once
+
+
+-help [category]   print full or category help message
+
+
+
+Valid categories include
+       advanced        - Advanced Optimizations
+       codegen         - Code Generation
+       compatibility   - Compatibility
+       component       - Component Control
+       data            - Data
+       deprecated      - Deprecated Options
+       diagnostics     - Compiler Diagnostics
+       float           - Floating Point
+       help            - Help
+       inline          - Inlining
+       ipo             - Interprocedural Optimization (IPO)
+       language        - Language
+       link            - Linking/Linker
+       misc            - Miscellaneous
+       opt             - Optimization
+       output          - Output
+       pgo             - Profile Guided Optimization (PGO)
+       preproc         - Preprocessor
+       reports         - Optimization Reports
+
+       openmp          - OpenMP and Parallel Processing
+
+
+Copyright (C) 1985-2013, Intel Corporation.  All rights reserved.
+* Other names and brands may be claimed as the property of others.
+
+
+
